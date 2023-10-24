@@ -7,7 +7,7 @@ import pandas as pd
 dataset = pd.read_json('./Dataset/transcriptions.json')
 transcripts = dataset['transcript']
 
-# Cleaning the text
+# Cleaning the text from transcriptions
 import re
 import nltk
 nltk.download('stopwords')
