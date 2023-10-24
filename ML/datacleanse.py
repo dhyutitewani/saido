@@ -1,11 +1,12 @@
 # Importing libraries
 import numpy as np
-np.__version__
 import matplotlib.pyplot as plt
 import pandas as pd
 
 # Dataset import here
-dataset = pd.read_csv('./Dataset/Restaurant_Reviews.tsv', delimiter = '\t', quoting = 3)
+dataset = pd.read_json('./Dataset/transcriptions.json')
+transcripts = dataset['transcript']
+# print(transcripts)
 
 # Cleaning the text
 import re
@@ -14,8 +15,8 @@ nltk.download('stopwords')
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 corpus = []
-for i in range(0, 1000):
-  review = re.sub('[^a-zA-Z]', ' ', dataset['Review'][i])
+for transcript in transcripts:
+  review = re.sub('[^a-zA-Z]', ' ', transcript)
   review = review.lower()
   review = review.split()
   ps = PorterStemmer()
