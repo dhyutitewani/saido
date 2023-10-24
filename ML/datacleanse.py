@@ -6,7 +6,6 @@ import pandas as pd
 # Dataset import here
 dataset = pd.read_json('./Dataset/transcriptions.json')
 transcripts = dataset['transcript']
-# print(transcripts)
 
 # Cleaning the text
 import re
