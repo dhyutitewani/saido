@@ -1,5 +1,5 @@
 # saido
-How To use 
+How to use 
 
 ```
 git clone --branch  dev-manjunath https://github.com/virajsazzala/saido
