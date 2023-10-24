@@ -1,2 +1,15 @@
 # saido
-how to make someone go bankrupt? a tutorial
+How to use 
+
+```
+git clone --branch  dev-manjunath https://github.com/virajsazzala/saido
+```
+```
+cd saido
+```
+```
+pip install -r requirements.txt
+```
+```
+python Driver.py
+```
