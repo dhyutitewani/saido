@@ -1,48 +1,92 @@
+import spacy
 import json
-import random
+import re
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
-from rasa_nlu.training_data import load_data
-from rasa_nlu import config  
-from rasa_nlu.model import Trainer
+# Load the JSON data
+with open('./transcriber/transcriptions.json', 'r') as file:
+    data = json.load(file)
 
-# Load video transcript JSON
-with open('transcription.json') as f:
-  data = json.load(f)
+# Extract and clean the transcripts
+transcripts = [entry['transcript'] for entry in data]
 
-transcript = data['transcript']
+nltk.download('stopwords')
 
-# Extract Q&A pairs from transcript
-sentences = transcript.split('.')
-qa_pairs = []
-for sentence in sentences:
-  if '?' in sentence:
-    question = sentence.strip()
-    answer = find_answer(question, transcript)  
-    qa_pairs.append((question, answer))
+# Cleaning the text using provided code
+corpus = []
+for transcript in transcripts:
+    review = re.sub('[^a-zA-Z]', ' ', transcript)
+    review = review.lower()
+    review = review.split()
+    ps = PorterStemmer()
+    all_stopwords = stopwords.words('english')
+    all_stopwords.remove('not')
+    review = [ps.stem(word) for word in review if not word in set(all_stopwords)]
+    review = ' '.join(review)
+    corpus.append(review)
 
-training_data = load_data(qa_pairs)  
+# Process the cleaned text
+cleaned_text = " ".join(corpus)
 
-trainer = Trainer(config.load("config.yml"))
-model = trainer.train(training_data)
+# Load spaCy NLP model
+nlp = spacy.load("en_core_web_sm")
 
-def find_answer(question, transcript):
-  # Logic to find answer to question based on transcript
-  return "Answer to: " + question 
+# Tokenize the text
+doc = nlp(cleaned_text)
 
-def chat(question):
-  response = model.parse(question)
-  intent = response['intent']['name']
+# Create a list of sentences
+sentences = [sent.text for sent in doc.sents]
 
-  if intent == 'ask_question':
-    entities = response['entities']
-    question = entities[0]['value']
+# Create a TF-IDF vectorizer
+tfidf_vectorizer = TfidfVectorizer()
+tfidf_matrix = tfidf_vectorizer.fit_transform(sentences)
 
-    if question in [q[0] for q in qa_pairs]:
-      return random.choice([a for q,a in qa_pairs if q==question])
+# Maintain conversation history
+conversation_history = []
+
+# Define a function to answer questions
+def answer_question(question):
+    question = re.sub('[^a-zA-Z]', ' ', question)
+    question = question.lower()
+
+    # Calculate TF-IDF vectors for the question and the sentences
+    tfidf_matrix_question = tfidf_vectorizer.transform([question])
+    cosine_similarities = cosine_similarity(tfidf_matrix_question, tfidf_matrix)
+
+    # Sort sentences by similarity to the question
+    ranked_sentences = sorted(enumerate(cosine_similarities[0]), key=lambda x: x[1], reverse=True)
+
+    # Extract the most similar sentence
+    most_similar_sentence_index, similarity = ranked_sentences[0]
+
+    # Return the most similar sentence as the answer
+    answer = sentences[most_similar_sentence_index]
+
+    # Add the user's question to the conversation history
+    conversation_history.append(question)
+
+    if similarity > 0.0:
+        return answer
     else:
-      return "Sorry I don't know the answer to that based on the given transcript"
+        return "I couldn't find an answer to your question."
 
-  else:
-    return "I didn't understand your question"
+# Example usage:
+print("\n")
+user_question1 = "What is Tails OS?"
+print(user_question1,"\n")
+response1 = answer_question(user_question1)
+print(response1,"\n")
 
-print(chat("What is the Linux file system?"))
+user_question2 = "Tell me more about its features."
+print(user_question2,"\n")
+response2 = answer_question(user_question2)
+print(response2,"\n")
+
+user_question3 = "How do I set it up?"
+print(user_question3,"\n")
+response3 = answer_question(user_question3)
+print(response3,"\n")
