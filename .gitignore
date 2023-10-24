@@ -1,0 +1,4 @@
+Audio/
+__pycache__/
+Pipfile
+Pipfile.lock

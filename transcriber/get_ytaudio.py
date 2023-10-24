@@ -3,9 +3,8 @@ from pytube import YouTube
 import os 
 
 # url input from user 
-def Get_url():
- url = YouTube(str(input())) 
- return url
+def Get_url(url):
+ return YouTube(url) 
   
 # extract only audio and download the file 
 def Get_Audio(url):
@@ -16,5 +15,6 @@ def Get_Audio(url):
 #returns youtube audio path
 def Get_Path(Audio_file):
    x = os.path.basename(Audio_file)
-   path = "Audio\\"+x
+   print("paht is:", x)
+   path = "./Audio/"+x
    return path
