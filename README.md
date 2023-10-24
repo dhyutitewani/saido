@@ -1,2 +1,6 @@
 # saido
-how to make someone go bankrupt? a tutorial
+How To use 
+
+```
+git clone --branch  dev-manjunath https://github.com/virajsazzala/saido
+```
