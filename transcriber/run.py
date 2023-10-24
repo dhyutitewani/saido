@@ -1,8 +1,8 @@
 import json
 import os
 
-from transcriber.get_ytaudio import *
-from transcriber.get_transcript import *
+from get_ytaudio import *
+from get_transcript import *
 
 if __name__ == "__main__":
     # Prompt for the input file containing a list of YouTube URLs
