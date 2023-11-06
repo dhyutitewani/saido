@@ -9,7 +9,7 @@ with open('./transcriber/transcriptions.json', 'r') as json_file:
     data = json.load(json_file)
 
 repo_id = "mistralai/Mistral-7B-v0.1"
-llm = HuggingFaceHub(huggingfacehub_api_token='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', repo_id=repo_id, model_kwargs={"temperature": 0.2, "max_new_tokens": 50})
+llm = HuggingFaceHub(huggingfacehub_api_token='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', repo_id=repo_id, model_kwargs={"temperature": 0.3, "max_new_tokens": 100})
 
 for text in data:
     embeddings = HuggingFaceEmbeddings()
