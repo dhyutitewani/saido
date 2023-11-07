@@ -5,4 +5,31 @@ Saido enhances your YouTube viewing experience by utilizing advanced Machine Lea
 
 ## License
 
-Saido is licensed under the [insert license name here] license. See the [LICENSE](LICENSE) file for more information.
+Saido is licensed under the MIT license. See the [LICENSE](LICENSE) file for more information.
+
+## Installation
+
+```
+pip install -r requirements.txt
+```
+
+## Usage
+
+To run the site:
+
+```
+python -m src.webapp.app
+```
+
+To run the model (alone):
+
+```
+python -m src.model.modelv1
+```
+
+To run the transcriber
+
+```
+python -m src.transcriber.transcriber
+```
+
