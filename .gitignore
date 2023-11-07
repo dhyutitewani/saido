@@ -4,3 +4,4 @@ Pipfile
 Pipfile.lock
 .env
 sample_model/
+.venv
