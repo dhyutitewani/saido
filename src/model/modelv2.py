@@ -15,41 +15,38 @@ def initialize_qa_chain(data):
     retriever = db.as_retriever(search_kwargs={'k': 2})
     return ConversationalRetrievalChain.from_llm(llm, retriever, return_source_documents=True)
 
-def ask_question(qa_chain, chat_history, query):
-    result = qa_chain({'question': query, 'chat_history': chat_history})
+def ask_question(qa_chain, query):
+    result = qa_chain({'question': query, 'chat_history': []})  # Provide an empty list as chat history
 
-    answer = result['answer'].split('\n\nQuestion:')[0].strip()
-    indexH = answer.find("\n\nHelpful Answer:")
-    # indexC = answer.find("\n\nCorrect Answer:")
-    # indexR = answer.find("\n\nRelated Questions")
-    # indexHash = answer.find("#")
+    answer = result['answer'].split('\n\n Question: ')[0].strip()
 
-    # print(result)
-    # if indexHash != -1:
-    #     answer = answer[:indexHash+1].strip()
+    # indexH = answer.find("\n\nHelpful Answer:")
+    # answer = answer[:indexH].strip()
 
-    # if indexC != -1:
-    #     answer = answer[:indexC].strip()
+    indexQ = answer.find('\n\nQuestion: ')
+    if indexQ != -1:
+        answer = answer[:indexQ].strip()
 
-    # if indexR != -1:
-    #     answer = answer[:indexR].strip()
-    
-    answer = answer[:indexH].strip()
+    indexU = answer.find('\n\nUser 1: ')
+    if indexU != -1:
+        answer = answer[:indexU].strip()
 
-    chat_history.append((query, result['answer']))
+    indexH = answer.find('\n\n## ')
+    if indexH != -1:
+        answer = answer[:indexH].strip()
+
     return answer
 
 if __name__ == "__main__":
-    with open('/home/exvynai/code/dev/saido/src/model/transcriptions.json', 'r') as json_file:
+    with open('C:\\Users\\Dhyuti Tewani\\OneDrive\\Documents\\Code\\projects\\ml\\saido\\src\\model\\transcriptions.json', 'r') as json_file:
         data = json.load(json_file)
-    
+
     qa_chain = initialize_qa_chain(data)
-    chat_history = []
 
     while True:
-        query = input('Prompt: ')
+        query = input('\n Prompt: ')
         if query.lower() in ["exit", "quit", "q"]:
             print('Exiting')
             sys.exit()
-        answer = ask_question(qa_chain, chat_history, query)
-        print('Answer: ' + answer + '\n')
+        answer = ask_question(qa_chain, query)
+        print('\n Answer: ' + answer + '\n')
