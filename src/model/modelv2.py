@@ -35,6 +35,14 @@ def ask_question(qa_chain, query):
     if indexH != -1:
         answer = answer[:indexH].strip()
 
+    indexR = answer.find('\n\n#### Related Questions')
+    if indexR != -1:
+        answer = answer[:indexR].strip()
+
+    indexA = answer.find('\n\This answer is: ')
+    if indexA != -1:
+        answer = answer[:indexA].strip()
+
     return answer
 
 if __name__ == "__main__":
