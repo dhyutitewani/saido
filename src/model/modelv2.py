@@ -9,19 +9,16 @@ def initialize_qa_chain(data):
     repo_id = "mistralai/Mistral-7B-v0.1"
     llm = HuggingFaceHub(huggingfacehub_api_token='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', repo_id=repo_id, model_kwargs={"temperature": 0.4, "max_new_tokens": 100})
     embeddings = HuggingFaceEmbeddings()
-    texts = [entry["transcript"] for entry in data]  # Extract the transcript data
-    texts = [text.replace("\n", " ") for text in texts]  # Replace newlines with spaces
+    texts = [entry["transcript"] for entry in data]
+    texts = [text.replace("\n", " ") for text in texts]
     db = Chroma.from_texts(texts, embeddings)
     retriever = db.as_retriever(search_kwargs={'k': 2})
     return ConversationalRetrievalChain.from_llm(llm, retriever, return_source_documents=True)
 
 def ask_question(qa_chain, query):
-    result = qa_chain({'question': query, 'chat_history': []})  # Provide an empty list as chat history
+    result = qa_chain({'question': query, 'chat_history': []})
 
     answer = result['answer'].split('\n\n Question: ')[0].strip()
-
-    # indexH = answer.find("\n\nHelpful Answer:")
-    # answer = answer[:indexH].strip()
 
     indexQ = answer.find('\n\nQuestion: ')
     if indexQ != -1:
@@ -35,7 +32,7 @@ def ask_question(qa_chain, query):
     if indexH != -1:
         answer = answer[:indexH].strip()
 
-    indexR = answer.find('\n\n#### Related Questions')
+    indexR = answer.find('\n\n### Related Questions')
     if indexR != -1:
         answer = answer[:indexR].strip()
 
