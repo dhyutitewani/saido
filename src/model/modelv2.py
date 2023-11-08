@@ -36,7 +36,7 @@ def ask_question(qa_chain, query):
     if indexR != -1:
         answer = answer[:indexR].strip()
 
-    indexA = answer.find('\n\This answer is: ')
+    indexA = answer.find('\n\nThis answer is: ')
     if indexA != -1:
         answer = answer[:indexA].strip()
 
@@ -49,9 +49,9 @@ if __name__ == "__main__":
     qa_chain = initialize_qa_chain(data)
 
     while True:
-        query = input('\n Prompt: ')
+        query = input('\nPrompt: ')
         if query.lower() in ["exit", "quit", "q"]:
             print('Exiting')
             sys.exit()
         answer = ask_question(qa_chain, query)
-        print('\n Answer: ' + answer + '\n')
+        print('\nAnswer: ' + answer + '\n')
