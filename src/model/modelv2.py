@@ -20,23 +20,23 @@ def ask_question(qa_chain, query):
 
     answer = result['answer'].split('\n\n Question: ')[0].strip()
 
-    indexQ = answer.find('\n\n Question: ')
+    indexQ = answer.find('\n\nQuestion: ')
     if indexQ != -1:
         answer = answer[:indexQ].strip()
 
-    indexU = answer.find('\n\n User 1: ')
+    indexU = answer.find('\n\nUser 1: ')
     if indexU != -1:
         answer = answer[:indexU].strip()
 
-    indexH = answer.find('\n\n ## ')
+    indexH = answer.find('\n\n## ')
     if indexH != -1:
         answer = answer[:indexH].strip()
 
-    indexR = answer.find('\n\n ### Related Questions')
+    indexR = answer.find('\n\n### Related Questions')
     if indexR != -1:
         answer = answer[:indexR].strip()
 
-    indexA = answer.find('\n\n This answer is: ')
+    indexA = answer.find('\n\nThis answer is: ')
     if indexA != -1:
         answer = answer[:indexA].strip()
 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     qa_chain = initialize_qa_chain(data)
 
     while True:
-        query = input('\n Prompt: ')
+        query = input('\n Prompt: ').strip('?')
         if query.lower() in ["exit", "quit", "q"]:
             print('Exiting')
             sys.exit()
