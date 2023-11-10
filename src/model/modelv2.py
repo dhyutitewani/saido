@@ -49,9 +49,9 @@ if __name__ == "__main__":
     qa_chain = initialize_qa_chain(data)
 
     while True:
-        query = input('\n Prompt: ').strip('?')
+        query = input('\nPrompt: ').strip('?')
         if query.lower() in ["exit", "quit", "q"]:
             print('Exiting')
             sys.exit()
         answer = ask_question(qa_chain, query)
-        print('\n Answer: ' + answer + '\n')
+        print('\nAnswer: ' + answer + '\n')
