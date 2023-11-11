@@ -3,7 +3,7 @@ import json
 import time
 
 from src.model.modelv2 import initialize_qa_chain, ask_question
-from src.transcriber.transcriber import transcribe_youtube_video
+from src.text_processing.transcriber import transcribe_youtube_video
 
 
 def gradio_chatbot():
