@@ -43,8 +43,13 @@ def ask_question(qa_chain, query):
     return answer
 
 if __name__ == "__main__":
-    with open('C:\\Users\\Dhyuti Tewani\\OneDrive\\Documents\\Code\\projects\\ml\\saido\\src\\model\\transcriptions.json', 'r') as json_file:
-        data = json.load(json_file)
+    from pathlib import Path
+
+    base_path = Path.cwd()
+    data_path = base_path / 'data' / 'transcriptions.json'
+
+    with open(data_path, 'r') as f:
+        data = json.load(f)
 
     qa_chain = initialize_qa_chain(data)
 
